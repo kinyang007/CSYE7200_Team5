@@ -1,0 +1,9 @@
+@()
+@defining(play.core.PlayVersion.current) { version =>
+    <h3>Role Selection</h3>
+    <ul>
+        <li><a href="@routes.HomeController.index">Home Page</a></li>
+        <li><a href="@routes.HomeController.userLogin">User</a></li>
+        <li><a href="@routes.HomeController.owner">Administrator</a></li>
+    </ul>
+}

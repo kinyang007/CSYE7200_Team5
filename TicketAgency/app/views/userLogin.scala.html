@@ -1,0 +1,30 @@
+
+@(userForm : Form[UserData])(implicit request: MessagesRequestHeader)
+
+@main("Welcome to Ticket Agency") {
+    @defining(play.core.PlayVersion.current) { version =>
+        <div class="wrapper doc">
+            <article>
+                <h1>User Log in</h1>
+
+                <form method="GET" action="/userPage">
+                    Name <input type="text" name="name"></input>
+                    Password <input type="text" name="password"></input>
+                    <input type="submit"></input>
+                </form></br>
+
+                @helper.form(action = routes.HomeController.userPage()) {
+                    @helper.CSRF.formField
+                    @helper.inputText(userForm("name"))
+                    @helper.inputText(userForm("password"))
+
+                    <input style = "display:inline-block; width:150px; height:30px; margin-left: 100px" type="submit" value="Submit">
+                 }
+
+            </article>
+            <aside>
+                @sidebar()
+            </aside>
+        </div>
+    }
+}

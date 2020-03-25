@@ -1,0 +1,15 @@
+
+@(userData: UserData)
+
+@main("Welcome to Ticket Agency") {
+    @defining(play.core.PlayVersion.current) { version =>
+        <div class="wrapper doc">
+            <article>
+                <h1>Hello, @userData.name Password: @userData.password</h1>
+            </article>
+            <aside>
+                @sidebar()
+            </aside>
+        </div>
+    }
+}
