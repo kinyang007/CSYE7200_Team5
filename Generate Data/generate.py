@@ -14,6 +14,7 @@ def generate(args):
     collection = db['events']
     # TD Garden
     event = {
+		'_id': 0,
         'name': "TD Garden",
         'type': "Ball Game",
         'rest_tickets': {
@@ -66,6 +67,7 @@ def generate(args):
 
     # BSO
     event = {
+		'_id': 1,
         'name': "Boston Symphony Orchestra",
         'type': "Concert",
         'rest_tickets': {
@@ -110,23 +112,31 @@ def generate(args):
 
     # MFA
     event = {
+		'_id': 2,
         'name': "Museum of Fine Arts",
         'type': "Exhibition",
         'rest_tickets': {
             'vip': 50,
             'standard': 950
-        },
-        'tickets': {
-            'vip': {
-                'amount': 50,
-                'price': 50
-            },
-            'standard': {
-                'amount': 950,
-                'price': 20
-            }
         }
     }
+    tickets = []
+    for i in range(1000):
+        if i < 50:
+            tickets.append({
+                'ticket_id': 'MFAVIP' + str(i).zfill(5),
+                'ticket_type': 'vip',
+                'price': 50.0,
+                'sold': False
+            })
+        else:
+            tickets.append({
+                'ticket_id': 'MFASTD' + str(i).zfill(5),
+                'ticket_type': 'standard',
+                'price': 20.0,
+                'sold': False
+            })
+    event['tickets'] = tickets
     collection.insert_one(event)
 
     # users
@@ -134,6 +144,7 @@ def generate(args):
     users = []
     for i in range(25000):
         users.append({
+			'_id': i,
             'name': "user" + str(i).zfill(5),
             'password': "123456",
             'tickets': []
