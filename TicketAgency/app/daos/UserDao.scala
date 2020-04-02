@@ -9,11 +9,11 @@ import pojos._
 
 object UserDao extends DbConfig {
 
-    private val codecRegistry = fromRegistries(fromProviders(classOf[User]), DEFAULT_CODEC_REGISTRY)
+    private val codecRegistry = fromRegistries(fromProviders(classOf[Ticket]), fromProviders(classOf[User]), DEFAULT_CODEC_REGISTRY)
     private val usersCollection = db.getCollection("users", classOf[User])
         .withCodecRegistry(codecRegistry)
 
-    def findAll: FindPublisher[User] = usersCollection.find(classOf[User])
+    def findAll: FindPublisher[User] = usersCollection.find()
 
     def findByLogin(name: String, password: String): FindPublisher[User] =
         usersCollection.find(
@@ -22,5 +22,9 @@ object UserDao extends DbConfig {
                 Filters.eq("password", password)
             )
         )
+
+    def findByName(name: String): FindPublisher[User] =
+        usersCollection.find(Filters.eq("name", name))
+
 
 }

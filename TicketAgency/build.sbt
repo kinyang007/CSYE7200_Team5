@@ -12,16 +12,18 @@ libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % "5.0.0
 
 libraryDependencies ++= Seq(
     "com.typesafe.akka" %% "akka-actor" % "2.6.4",
+    "com.typesafe.akka" %% "akka-actor-typed" % "2.6.4",
     "com.typesafe.akka" %% "akka-http" % "10.1.11",
     "com.typesafe.akka" %% "akka-stream" % "2.6.4",
+    "com.typesafe.akka" %% "akka-slf4j" % "2.6.4",
     "org.mongodb.scala" %% "mongo-scala-driver" % "2.9.0",
     "com.lightbend.akka" %% "akka-stream-alpakka-mongodb" % "2.0.0-RC1"
 )
 
-
-//libraryDependencies ++= Seq(
-//    "org.reactivemongo" %% "play2-reactivemongo" % "0.20.3-play28"
-//)
+// Tests package
+libraryDependencies ++= Seq(
+    "com.typesafe.akka" %% "akka-stream-testkit" % "2.6.4"
+)
 
 // Adds additional packages into Twirl
 //TwirlKeys.templateImports += "com.example.controllers._"
