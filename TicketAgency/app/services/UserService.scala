@@ -8,20 +8,21 @@ import akka.stream.scaladsl.{Sink, Source}
 import daos.UserDao
 import pojos.User
 
-import scala.concurrent.Future
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.util.{Failure, Success}
+import scala.concurrent._
+import scala.concurrent.duration._
+import scala.language.postfixOps
 
-class UserService {
+object UserService {
     implicit val actorSystem: ActorSystem = ActorSystem()
     implicit val mat: Materializer = Materializer(actorSystem)
 
-    val source: Source[User, NotUsed] = MongoSource(UserDao.findByLogin("user00001", "123456"))
+    def userLogin(name: String, password: String): Boolean = {
+        val source: Source[User, NotUsed] = MongoSource(UserDao.findByLogin(name, password))
 
-    val rows: Future[Seq[User]] = source.runWith(Sink.seq)
+        val rows: Future[Seq[User]] = source.runWith(Sink.seq)
 
-//    rows onComplete {
-//        case Success(result) => println(result)
-//        case Failure(exception) => println("error: " + exception.getMessage)
-//    }
+        val result: Seq[User] = Await.result(rows, 5 seconds)
+
+        if (result.isEmpty) false else true
+    }
 }
