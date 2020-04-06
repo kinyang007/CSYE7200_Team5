@@ -16,13 +16,11 @@ object UserService {
     implicit val actorSystem: ActorSystem = ActorSystem()
     implicit val mat: Materializer = Materializer(actorSystem)
 
-    def userLogin(name: String, password: String): Boolean = {
+    def userLogin(name: String, password: String): Seq[User] = {
         val source: Source[User, NotUsed] = MongoSource(UserDao.findByLogin(name, password))
 
         val rows: Future[Seq[User]] = source.runWith(Sink.seq)
 
-        val result: Seq[User] = Await.result(rows, 5 seconds)
-
-        if (result.isEmpty) false else true
+        Await.result(rows, 1000 millis)
     }
 }

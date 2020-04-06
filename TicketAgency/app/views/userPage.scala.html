@@ -1,11 +1,31 @@
-
-@(userData: UserData)
+@import pojos.{User,Ticket}
+@(user:User)
 
 @main("Welcome to Ticket Agency") {
     @defining(play.core.PlayVersion.current) { version =>
+
         <div class="wrapper doc">
             <article>
-                <h1>Hello, @userData.name Password: @userData.password</h1>
+                <h1>Hello, @user.name Password: @user.password</h1>
+
+                <table border="1">
+                    <tr>
+                        <th>Ticket ID</th>
+                        <th>Type</th>
+                        <th>Price</th>
+                        <th>Sold</th>
+                    </tr>
+
+                    @for(t <- user.tickets) {
+                        <tr>
+                            <td>@t.ticket_id</td>
+                            <td>@t.ticket_type</td>
+                            <td>@t.price</td>
+                            <td>@t.sold</td>
+                        </tr>
+                    }
+                </table>
+
             </article>
             <aside>
                 @sidebar()

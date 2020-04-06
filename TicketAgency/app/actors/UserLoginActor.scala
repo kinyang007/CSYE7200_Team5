@@ -1,7 +1,6 @@
 package actors
 
 import akka.actor._
-
 import services._
 
 object UserLoginActor {
