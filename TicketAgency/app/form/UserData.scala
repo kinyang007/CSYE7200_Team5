@@ -1,7 +1,7 @@
-package pojos
+package form
 
-import play.api.data._
 import play.api.data.Forms._
+import play.api.data._
 
 
 case class UserData(name: String, password: String)

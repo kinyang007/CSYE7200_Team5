@@ -4,15 +4,16 @@ import actors.UserLoginActor
 import actors.UserLoginActor.LoginInfo
 import akka.actor.ActorSystem
 import akka.util.Timeout
+import form.UserData
 import javax.inject._
 import play.api.mvc._
-import pojos.{User, UserData}
+import pojos.User
 
 import scala.language.postfixOps
 import scala.concurrent.{Await, Future}
 
 @Singleton
-class  HomeController @Inject()(system: ActorSystem, cc: ControllerComponents) extends AbstractController(cc) {
+class  HomeController @Inject()(system: ActorSystem, cc: ControllerComponents) extends AbstractController(cc) with play.api.i18n.I18nSupport {
     val userLoginActor = system.actorOf(UserLoginActor.props, "userlogin-actor")
 
     import akka.pattern.ask
@@ -25,7 +26,7 @@ class  HomeController @Inject()(system: ActorSystem, cc: ControllerComponents) e
     }
 
     def userLogin() = Action { implicit request: Request[AnyContent] =>
-        Ok(views.html.userLogin())
+        Ok(views.html.userLogin(UserData.userForm))
     }
 
     def userPage() = Action { implicit request: Request[AnyContent] =>
@@ -35,7 +36,7 @@ class  HomeController @Inject()(system: ActorSystem, cc: ControllerComponents) e
         if(!userList.isEmpty)
             Ok(views.html.userPage(userList.head))
         else
-            Ok(views.html.userLogin())
+            Ok(views.html.userLogin(UserData.userForm))
     }
 
     def owner() = Action { implicit request: Request[AnyContent] =>
