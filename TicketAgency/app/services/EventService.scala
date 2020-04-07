@@ -49,7 +49,7 @@ object EventService {
                 filter = Filters.eq("_id", event._id),
                 update = Updates.combine(
                     Updates.set("name", event.name),
-                    Updates.set("type", event.`type`),
+                    Updates.set("event_type", event.event_type),
                     Updates.set("rest_tickets", event.rest_tickets),
                     Updates.set("tickets", event.tickets)
                 )

@@ -10,7 +10,7 @@ class EventServiceSpec extends FlatSpec with Matchers {
 
         result.size shouldBe 3
         result.head.name shouldBe "TD Garden"
-        result.head.`type` shouldBe "Ball Game"
+        result.head.event_type shouldBe "Ball Game"
         result.head.rest_tickets shouldBe Map(
             "vip" -> 50,
             "floor1" -> 5000,
@@ -25,7 +25,7 @@ class EventServiceSpec extends FlatSpec with Matchers {
         val result = EventService.findByName("Boston Symphony Orchestra")
 
         result.head.name shouldBe "Boston Symphony Orchestra"
-        result.head.`type` shouldBe "Concert"
+        result.head.event_type shouldBe "Concert"
         result.head.rest_tickets shouldBe Map(
             "vip" -> 50,
             "floor1" -> 4000,
@@ -39,7 +39,7 @@ class EventServiceSpec extends FlatSpec with Matchers {
         val result = EventService.findByType("Exhibition")
 
         result.head.name shouldBe "Museum of Fine Arts"
-        result.head.`type` shouldBe "Exhibition"
+        result.head.event_type shouldBe "Exhibition"
         result.head.rest_tickets shouldBe Map(
             "vip" -> 50,
             "standard" -> 950

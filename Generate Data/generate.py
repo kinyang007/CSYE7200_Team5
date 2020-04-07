@@ -16,7 +16,7 @@ def generate(args):
     event = {
 		'_id': 0,
         'name': "TD Garden",
-        'type': "Ball Game",
+        'event_type': "Ball Game",
         'rest_tickets': {
             'vip': 50,
             'floor1': 5000,
@@ -69,7 +69,7 @@ def generate(args):
     event = {
 		'_id': 1,
         'name': "Boston Symphony Orchestra",
-        'type': "Concert",
+        'event_type': "Concert",
         'rest_tickets': {
             'vip': 50,
             'floor1': 4000,
@@ -114,7 +114,7 @@ def generate(args):
     event = {
 		'_id': 2,
         'name': "Museum of Fine Arts",
-        'type': "Exhibition",
+        'event_type': "Exhibition",
         'rest_tickets': {
             'vip': 50,
             'standard': 950

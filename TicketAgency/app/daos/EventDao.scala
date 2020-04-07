@@ -23,14 +23,6 @@ object EventDao extends DbConfig {
         eventsCollection.find(Filters.eq("name", name))
 
     def findByType(event_type: String): FindPublisher[Event] =
-        eventsCollection.find(Filters.eq("type", event_type))
-
-    def modifyTicketStatus(event: Event): Publisher[UpdateResult] =
-        eventsCollection.updateOne(Filters.eq("_id", event._id),
-            combine(
-                set("rest_tickets", event.rest_tickets),
-                set("tickets", event.tickets)
-            )
-        )
+        eventsCollection.find(Filters.eq("event_type", event_type))
 
 }
