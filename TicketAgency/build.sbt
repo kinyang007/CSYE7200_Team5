@@ -24,7 +24,6 @@ libraryDependencies ++= Seq(
 libraryDependencies ++= Seq(
     "com.typesafe.akka" %% "akka-stream-testkit" % "2.6.4"
 )
-
 // Adds additional packages into Twirl
 //TwirlKeys.templateImports += "com.example.controllers._"
 

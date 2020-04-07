@@ -5,7 +5,7 @@ import actors.{EventActor, UserActor}
 import actors.UserActor.{FindByUserName, LoginInfo, UpdateUser}
 import akka.actor.ActorSystem
 import akka.util.Timeout
-import form.UserData
+import form.{EventData, UserData, UserNameData}
 import javax.inject._
 import play.api.mvc._
 import pojos.{Event, User}
@@ -64,8 +64,33 @@ class  HomeController @Inject()(system: ActorSystem, cc: ControllerComponents) e
     }
 
     def owner() = Action { implicit request: Request[AnyContent] =>
-        Ok(views.html.owner())
+        Ok(views.html.owner(UserData.userForm))
     }
 
+    def ownerCheckEvent() = Action { implicit request: Request[AnyContent] =>
+        Ok(views.html.ownerCheckEvent(EventData.ownerForm, UserNameData.userNameForm))
+
+    }
+
+    def ownerEventList() = Action { implicit request: Request[AnyContent] =>
+        val formData : EventData = EventData.ownerForm.bindFromRequest().get
+        val eventResult: Future[Seq[Event]] = (eventActor ? FindByEventName(formData.eventName)).mapTo[Seq[Event]]
+        val event = Await.result(eventResult, 5 seconds)
+        if (!event.isEmpty)
+            Ok(views.html.ownerEventList(event.head))
+        else
+            Ok(views.html.ownerCheckEvent(EventData.ownerForm,UserNameData.userNameForm))
+    }
+
+    def userTicketHistory() = Action { implicit request: Request[AnyContent] =>
+        val formData : UserNameData = UserNameData.userNameForm.bindFromRequest().get
+
+        val userResult: Future[Seq[User]] = (userActor ? FindByUserName(formData.username)).mapTo[Seq[User]]
+        val userList = Await.result(userResult, 5 seconds)
+        if (!userList.isEmpty)
+            Ok(views.html.userTicketHistory(userList.head))
+        else
+            Ok(views.html.ownerCheckEvent(EventData.ownerForm ,UserNameData.userNameForm))
+    }
 
 }
