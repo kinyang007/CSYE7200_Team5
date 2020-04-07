@@ -7,6 +7,8 @@
 GET     /                           controllers.HomeController.index
 GET     /userLogin                  controllers.HomeController.userLogin
 GET     /userPage                   controllers.HomeController.userPage
+GET     /userPurchase               controllers.HomeController.userPurchase(name)
+GET     /purchaseResult             controllers.HomeController.purchaseResult(user,ticket)
 GET     /owner                      controllers.HomeController.owner
 
 # Map static resources from the /public folder to the /assets URL path

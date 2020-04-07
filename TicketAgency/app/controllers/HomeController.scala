@@ -34,9 +34,20 @@ class  HomeController @Inject()(system: ActorSystem, cc: ControllerComponents) e
         val result: Future[Seq[User]] = (userActor ? LoginInfo(formData.name,formData.password)).mapTo[Seq[User]]
         val userList = Await.result(result,1000 millis)
         if(!userList.isEmpty)
-            Ok(views.html.userPage(userList.head))
+            Ok(views.html.userPage(userList.head)).withSession("test" -> "123123123")
         else
             Ok(views.html.userLogin(UserData.userForm))
+    }
+
+    def userPurchase(name: String) = Action { implicit request: Request[AnyContent] =>
+        Ok(views.html.userPurchase(name))
+    }
+
+    def purchaseResult(user: String, ticket: String) = Action { implicit request: Request[AnyContent] =>
+        val ticketData = ticket.split(",")
+        val event = ticketData.head
+        val ticketType = ticketData.tail.head
+        Ok(views.html.purchaseResult(user, ticket))
     }
 
     def owner() = Action { implicit request: Request[AnyContent] =>

@@ -8,10 +8,10 @@
             <article>
                 <h1>Hello, @user.name Password: @user.password</h1>
 
-                <form>
-                    <input size="" type="submit" value="Buy Tickets"/>
+                <form method="GET" action="/userPurchase">
+                    <input type="hidden" name ="name" value="@user.name" />
+                    <input style = "display:inline-block; width:150px; height:30px; margin-left: 100px" type="submit" value="Buy Tickets"/>
                 </form>
-
 
                 <table border="1">
                     <tr>

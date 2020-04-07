@@ -1,0 +1,16 @@
+@(name : String, ticket : String)
+
+@main("Welcome to Ticket Agency") {
+    @defining(play.core.PlayVersion.current) { version =>
+
+        <div class="wrapper doc">
+            <article>
+                <h1>Hello, @name @ticket</h1>
+
+            </article>
+            <aside>
+            @sidebar()
+            </aside>
+        </div>
+    }
+}
