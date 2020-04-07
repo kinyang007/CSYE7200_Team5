@@ -1,7 +1,7 @@
 package controllers
 
-import actors.UserLoginActor
-import actors.UserLoginActor.LoginInfo
+import actors.UserActor
+import actors.UserActor.LoginInfo
 import akka.actor.ActorSystem
 import akka.util.Timeout
 import form.UserData
@@ -14,7 +14,7 @@ import scala.concurrent.{Await, Future}
 
 @Singleton
 class  HomeController @Inject()(system: ActorSystem, cc: ControllerComponents) extends AbstractController(cc) with play.api.i18n.I18nSupport {
-    val userLoginActor = system.actorOf(UserLoginActor.props, "userlogin-actor")
+    val userActor = system.actorOf(UserActor.props, "userlogin-actor")
 
     import akka.pattern.ask
 
@@ -31,7 +31,7 @@ class  HomeController @Inject()(system: ActorSystem, cc: ControllerComponents) e
 
     def userPage() = Action { implicit request: Request[AnyContent] =>
         val formData : UserData = UserData.userForm.bindFromRequest().get
-        val result: Future[Seq[User]] = (userLoginActor ? LoginInfo(formData.name,formData.password)).mapTo[Seq[User]]
+        val result: Future[Seq[User]] = (userActor ? LoginInfo(formData.name,formData.password)).mapTo[Seq[User]]
         val userList = Await.result(result,1000 millis)
         if(!userList.isEmpty)
             Ok(views.html.userPage(userList.head))

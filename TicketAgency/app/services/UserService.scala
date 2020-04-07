@@ -1,11 +1,17 @@
 package services
 
-import akka.NotUsed
+import java.util.concurrent.CompletionStage
+
+import akka.{Done, NotUsed}
 import akka.actor.ActorSystem
 import akka.stream.Materializer
+import akka.stream.alpakka.mongodb.DocumentUpdate
+import akka.stream.alpakka.mongodb.scaladsl.MongoSink
 import akka.stream.alpakka.mongodb.scaladsl.MongoSource
 import akka.stream.scaladsl.{Sink, Source}
 import daos.UserDao
+import org.mongodb.scala.model.Filters
+import org.mongodb.scala.model.Updates
 import pojos.User
 
 import scala.concurrent._
@@ -21,6 +27,39 @@ object UserService {
 
         val rows: Future[Seq[User]] = source.runWith(Sink.seq)
 
-        Await.result(rows, 1000 millis)
+        Await.result(rows, 2 seconds)
+    }
+
+    def findAll: Seq[User] = {
+        val source: Source[User, NotUsed] = MongoSource(UserDao.findAll)
+
+        val rows: Future[Seq[User]] = source.runWith(Sink.seq)
+
+        Await.result(rows, 1 minute)
+    }
+
+    def findByName(name: String): Seq[User] = {
+        val source: Source[User, NotUsed] = MongoSource(UserDao.findByName(name))
+
+        val rows: Future[Seq[User]] = source.runWith(Sink.seq)
+
+        Await.result(rows, 2 seconds)
+    }
+
+    def updateUser(user: User): Done = {
+        val source: Source[User, NotUsed]#Repr[DocumentUpdate] = Source(Seq(user)).map(
+            user => DocumentUpdate(
+                filter = Filters.eq("_id", user._id),
+                update = Updates.combine(
+                    Updates.set("name", user.name),
+                    Updates.set("password", user.password),
+                    Updates.set("tickets", user.tickets)
+                )
+            )
+        )
+
+        val completion: Future[Done] = source.runWith(MongoSink.updateOne(UserDao.usersCollection))
+
+        Await.result(completion, 2 seconds)
     }
 }

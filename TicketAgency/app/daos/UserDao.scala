@@ -1,17 +1,19 @@
 package daos
 
-import com.mongodb.reactivestreams.client.FindPublisher
+import com.mongodb.reactivestreams.client.{FindPublisher, MongoCollection}
+import org.bson.Document
 import org.bson.codecs.configuration.CodecRegistries.{fromProviders, fromRegistries}
 import org.mongodb.scala.MongoClient.DEFAULT_CODEC_REGISTRY
 import org.mongodb.scala.bson.codecs.Macros._
 import org.mongodb.scala.model.Filters
 import pojos._
 
+
 object UserDao extends DbConfig {
 
     private val codecRegistry = fromRegistries(fromProviders(classOf[Ticket]), fromProviders(classOf[User]), DEFAULT_CODEC_REGISTRY)
-    private val usersCollection = db.getCollection("users", classOf[User])
-        .withCodecRegistry(codecRegistry)
+
+    val usersCollection: MongoCollection[User] = db.getCollection("users", classOf[User]).withCodecRegistry(codecRegistry)
 
     def findAll: FindPublisher[User] = usersCollection.find()
 
@@ -25,6 +27,5 @@ object UserDao extends DbConfig {
 
     def findByName(name: String): FindPublisher[User] =
         usersCollection.find(Filters.eq("name", name))
-
 
 }
