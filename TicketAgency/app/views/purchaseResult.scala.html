@@ -1,11 +1,11 @@
-@(name : String, ticket : String)
+@(userName : String, ticketInfo : String)
 
 @main("Welcome to Ticket Agency") {
     @defining(play.core.PlayVersion.current) { version =>
 
         <div class="wrapper doc">
             <article>
-                <h1>Hello, @name @ticket</h1>
+                <h1>Hello, @userName @ticketInfo</h1>
 
             </article>
             <aside>
