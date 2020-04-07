@@ -1,7 +1,8 @@
 package controllers
 
+import actors.EventActor.FindByEventName
 import actors.{EventActor, UserActor}
-import actors.UserActor.{FindByName, LoginInfo, UpdateUser}
+import actors.UserActor.{FindByUserName, LoginInfo, UpdateUser}
 import akka.actor.ActorSystem
 import akka.util.Timeout
 import form.UserData
@@ -20,7 +21,7 @@ class  HomeController @Inject()(system: ActorSystem, cc: ControllerComponents) e
     import akka.pattern.ask
 
     import scala.concurrent.duration._
-    implicit val timeout: Timeout = 5.seconds
+    implicit val timeout: Timeout = 5 seconds
 
     def index() = Action { implicit request: Request[AnyContent] =>
         Ok(views.html.index())
@@ -33,7 +34,7 @@ class  HomeController @Inject()(system: ActorSystem, cc: ControllerComponents) e
     def userPage() = Action { implicit request: Request[AnyContent] =>
         val formData : UserData = UserData.userForm.bindFromRequest().get
         val result: Future[Seq[User]] = (userActor ? LoginInfo(formData.name,formData.password)).mapTo[Seq[User]]
-        val userList = Await.result(result,5 seconds)
+        val userList = Await.result(result, 5 seconds)
         if(!userList.isEmpty)
             Ok(views.html.userPage(userList.head)).withSession("test" -> "123123123")
         else
@@ -49,11 +50,11 @@ class  HomeController @Inject()(system: ActorSystem, cc: ControllerComponents) e
         val eventName = ticketData.head
         val ticketType = ticketData.tail.head
 
-        val userResult: Future[Seq[User]] = (userActor ? FindByName(userName)).mapTo[Seq[User]]
-        val user = Await.result(userResult,5 seconds).head
+        val userResult: Future[Seq[User]] = (userActor ? FindByUserName(userName)).mapTo[Seq[User]]
+        val user = Await.result(userResult, 5 seconds).head
 
-        val eventResult: Future[Seq[Event]] = (eventActor ? FindByName(eventName)).mapTo[Seq[Event]]
-        val event = Await.result(eventResult,30 seconds).head
+        val eventResult: Future[Seq[Event]] = (eventActor ? FindByEventName(eventName)).mapTo[Seq[Event]]
+        val event = Await.result(eventResult, 5 seconds).head
 
         val tickets = event.tickets.filter(t => t.ticket_type == ticketType)
         val newUserTickets = user.tickets :+ tickets.head

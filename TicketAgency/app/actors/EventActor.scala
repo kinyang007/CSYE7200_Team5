@@ -7,9 +7,9 @@ import pojos._
 object EventActor {
     def props = Props[EventActor]
 
-    case object FindAll
-    case class FindByName(name: String)
-    case class FindByType(event_type: String)
+    case object FindAllEvent
+    case class FindByEventName(name: String)
+    case class FindByEventType(event_type: String)
     case class UpdateEvent(event: Event)
 }
 
@@ -17,13 +17,13 @@ class EventActor extends Actor {
     import EventActor._
 
     override def receive: Receive = {
-        case FindByName(name) =>
+        case FindByEventName(name) =>
             sender() ! EventService.findByName(name)
-        case FindByType(event_type) =>
+        case FindByEventType(event_type) =>
             sender() ! EventService.findByType(event_type)
         case UpdateEvent(event) =>
             sender() ! EventService.updateEvent(event)
-        case FindAll =>
+        case FindAllEvent =>
             sender() ! EventService.findAll
     }
 }
