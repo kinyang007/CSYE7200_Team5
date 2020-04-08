@@ -1,6 +1,6 @@
 package controllers
 
-import actors.EventActor.FindByEventName
+import actors.EventActor.{FindByEventName, UpdateEvent}
 import actors.{EventActor, UserActor}
 import actors.UserActor.{FindByUserName, LoginInfo, UpdateUser}
 import akka.actor.ActorSystem
@@ -8,7 +8,7 @@ import akka.util.Timeout
 import form.{EventData, UserData, UserNameData}
 import javax.inject._
 import play.api.mvc._
-import pojos.{Event, User}
+import pojos.{Event, Ticket, User}
 
 import scala.language.postfixOps
 import scala.concurrent.{Await, Future}
@@ -56,11 +56,26 @@ class  HomeController @Inject()(system: ActorSystem, cc: ControllerComponents) e
         val eventResult: Future[Seq[Event]] = (eventActor ? FindByEventName(eventName)).mapTo[Seq[Event]]
         val event = Await.result(eventResult, 5 seconds).head
 
-        val tickets = event.tickets.filter(t => t.ticket_type == ticketType)
-        val newUserTickets = user.tickets :+ tickets.head
-        val newUser = new User(user._id,user.name,user.password, newUserTickets)
-        userActor ? UpdateUser(newUser)
-        Ok(views.html.purchaseResult(userName, ticketInfo))
+        val tickets = event.tickets.filter(t => t.ticket_type == ticketType && t.sold==false)
+        if(!tickets.isEmpty){
+            val ticket = tickets.head
+            val ticketIndex = event.tickets.indexOf(ticket)
+
+            val newUserTickets = user.tickets :+ new Ticket(ticket.ticket_id,ticket.ticket_type,ticket.price,true)
+            val newUser = new User(user._id,user.name,user.password, newUserTickets)
+
+            val mRest = scala.collection.mutable.Map(event.rest_tickets.toSeq:_*)
+            mRest.put(ticketType, mRest.get(ticketType).get-1)
+            val newEventRest = mRest.toMap
+            val newEventTickets = event.tickets.updated(ticketIndex, new Ticket(ticket.ticket_id,ticket.ticket_type,ticket.price,true))
+            val newEvent = new Event(event._id, event.name, event.event_type, newEventRest, newEventTickets)
+
+            userActor ? UpdateUser(newUser)
+            eventActor ? UpdateEvent(newEvent)
+            Ok(views.html.purchaseResult(userName, ticketInfo))
+        }else
+            Ok(views.html.userPurchase(userName))
+
     }
 
     def owner() = Action { implicit request: Request[AnyContent] =>
