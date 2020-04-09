@@ -7,21 +7,21 @@
 
     <div class="wrapper doc">
       <article>
-        <h1>Event Detail</h1>
+        <h2>Ticket Purchase History of @user.name</h2>
 
         <table border="1">
           <tr>
-            <th>Name</th>
-            <th>Ticket Purchase History</th>
+            <th>Ticket ID</th>
+            <th>Ticket Type</th>
+            <th>Price</th>
           </tr>
-
+          @for( t <- user.tickets) {
             <tr>
-              <td>@user.name</td>
-              @for( t <- user.tickets) {
-                <td>ID: t.ticket_id, Type: t.ticket_type, Price: t.price</td>
-              }
-
+              <td>@t.ticket_id</td>
+              <td>@t.ticket_type</td>
+              <td>@t.price</td>
             </tr>
+          }
         </table>
 
       </article>
