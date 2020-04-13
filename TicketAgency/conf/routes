@@ -6,7 +6,8 @@
 # An example controller showing a sample home page
 GET     /                           controllers.HomeController.index
 GET     /userLogin                  controllers.HomeController.userLogin
-GET     /userPage                   controllers.HomeController.userPage
++ nocsrf
+POST    /userPage                   controllers.HomeController.userPage
 GET     /userPurchase               controllers.HomeController.userPurchase(name)
 GET     /purchaseResult             controllers.HomeController.purchaseResult(userName,ticketInfo)
 GET     /owner                      controllers.HomeController.owner

@@ -32,13 +32,19 @@ class  HomeController @Inject()(system: ActorSystem, cc: ControllerComponents) e
     }
 
     def userPage() = Action { implicit request: Request[AnyContent] =>
-        val formData : UserData = UserData.userForm.bindFromRequest().get
-        val result: Future[Seq[User]] = (userActor ? LoginInfo(formData.name,formData.password)).mapTo[Seq[User]]
-        val userList = Await.result(result, 5 seconds)
-        if(!userList.isEmpty)
-            Ok(views.html.userPage(userList.head)).withSession("test" -> "123123123")
-        else
-            Ok(views.html.userLogin(UserData.userForm))
+      val postVals = request.body.asFormUrlEncoded
+      postVals.map{ args =>
+          val name = args("name").head
+          val password = args("password").head
+          val result: Future[Seq[User]] = (userActor ? LoginInfo(name,password)).mapTo[Seq[User]]
+          val userList = Await.result(result, 5 seconds)
+          if(!userList.isEmpty)
+              Ok(views.html.userPage(userList.head))
+          else
+              Ok(views.html.userLogin(UserData.userForm))
+      }.getOrElse{
+          Ok(views.html.userLogin(UserData.userForm))
+      }
     }
 
     def userPurchase(name: String) = Action { implicit request: Request[AnyContent] =>
