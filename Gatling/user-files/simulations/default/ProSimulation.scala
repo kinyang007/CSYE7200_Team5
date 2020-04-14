@@ -29,34 +29,44 @@ class ProSimulation extends Simulation {
     .acceptLanguageHeader("en-US,en;q=0.5")
     .acceptEncodingHeader("gzip, deflate")
     .userAgentHeader("Mozilla/5.0 (Macintosh; Intel Mac OS X 10.8; rv:16.0) Gecko/20100101 Firefox/16.0")
+  
+  val scn = scenario("User").exec(Search.search)
 
-  val scn = scenario("Scenario Name") // A scenario is a chain of requests and pauses
-    .exec(
-      http("request_1")
-        .get("/")
-    )
-    .pause(7) // Note that Gatling has recorded real time pauses
-    .exec(
-      http("request_2")
-        .get("/userLogin")
-    )
-    .pause(1)
-    .exec(
-      http("request_3") 
-        .post("/userPage")
-        .formParam("name", "user00001")
-        .formParam("password", "123456")
-    )
-    .pause(3)
-    .exec(
-      http("request_4")
-        .get("/userPurchase?name=user00001")
-    )
-    .pause(2)
+  setUp(scn.inject(atOnceUsers(5)).protocols(httpProtocol))
+
+
+  object Search {
+    val feeder = csv("search.csv").random 
+
+    val search = 
+      feed(feeder)
+    //   .exec(
+    //   http("request_1")
+    //     .get("/")
+    //   )
+    //   .pause(5) // Note that Gatling has recorded real time pauses
+    //   .exec(
+    //     http("request_2")
+    //       .get("/userLogin")
+    //   )
+    //   .pause(5)
+    //   .exec(
+    //     http("request_3") 
+    //       .post("/userPage")
+    //       .formParam("name", "${userName}")
+    //       .formParam("password", "123456")
+    //   )
+    //   .pause(5)
+    //   .exec(
+    //     http("request_4")
+    //       .get("/userPurchase?name=${userName}")
+    //   )
+    // .pause(5)
     .exec(
       http("request_5")
-        .get("/purchaseResult?userName=user00001&ticketInfo=TD+Garden%2Cvip")
+        .get("/purchaseResult?userName=${userName}&ticketInfo=TD+Garden%2Cvip")
     )
-    
-  setUp(scn.inject(atOnceUsers(1)).protocols(httpProtocol))
+  }
+
+
 }
