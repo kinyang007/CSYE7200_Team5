@@ -32,9 +32,9 @@ class ProSimulation extends Simulation {
   
   val scn = scenario("User").exec(Search.search)
 
-  // setUp(scn.inject(atOnceUsers(5)).protocols(httpProtocol))
+  setUp(scn.inject(atOnceUsers(5)).protocols(httpProtocol))
 
-   setUp(scn.inject(rampUsers(100) during(500 seconds)).protocols(httpProtocol))
+  //setUp(scn.inject(rampUsers(100) during(500 seconds)).protocols(httpProtocol))
 
   object Search {
     val user = csv("user.csv").random 

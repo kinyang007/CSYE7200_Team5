@@ -1,7 +1,7 @@
 package controllers
 
 import actors.EventActor.FindByEventName
-import actors.PurchaseActor.Purchase
+import actors.PurchaseActor.{Check, Purchase}
 import actors.UserActor.{FindByUserName, LoginInfo}
 import actors.{EventActor, PurchaseActor, UserActor}
 import akka.actor.ActorSystem
@@ -23,12 +23,12 @@ class  HomeController @Inject()(system: ActorSystem, cc: ControllerComponents)
     val eventActor = system.actorOf(EventActor.props, "event-actor")
     val purchaseActor = system.actorOf(PurchaseActor.props, "purchase-actor")
 
-//    system.scheduler.scheduleAtFixedRate(
-//        initialDelay = 0 microseconds,
-//        interval = 2 second,
-//        receiver = purchaseActor,
-//        message = "check"
-//    )
+    system.scheduler.scheduleAtFixedRate(
+        initialDelay = 0 microseconds,
+        interval = 2 second,
+        receiver = purchaseActor,
+        message = Check("check")
+    )
 
     implicit val timeout: Timeout = 5 minutes
 
