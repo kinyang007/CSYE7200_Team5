@@ -24,7 +24,7 @@ def generate(args):
             'floor1': 5000,
             'floor2': 10000,
             'floor3': 15000,
-            'balcony': 29950
+            'balcony': 19950
         }
     }
     tickets = []

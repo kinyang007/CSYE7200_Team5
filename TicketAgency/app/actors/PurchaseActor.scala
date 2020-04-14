@@ -37,7 +37,7 @@ class PurchaseActor extends Actor with ActorLogging {
             purchaseQueue.append(Purchase(username, ticketInfo))
             lastTime = System.currentTimeMillis()
             println(s"Received. User Name: $username\tTicket Info: $ticketInfo\tTime: ${df.format(lastTime)}")
-            if (lastTime - startTime > 10) {
+            if (lastTime - startTime > 2000) {
                 // TODO - Batch processing (How to return the result signal for each message)
                 batchProcess()
             } else {
@@ -46,7 +46,8 @@ class PurchaseActor extends Actor with ActorLogging {
         case Check(check) =>
             println(s"$check")
             lastTime = System.currentTimeMillis()
-            if (lastTime - startTime > 10) {
+            println(s"Received. Last Time: ${df.format(lastTime)}")
+            if (lastTime - startTime > 2000 && purchaseQueue.nonEmpty) {
                 batchProcess()
             }
     }

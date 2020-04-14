@@ -77,10 +77,10 @@ object PurchaseService {
             )
         )
 
-        val completion0 = eventSource.runWith(MongoSink.updateOne(EventDao.eventsCollection))
-        Await.result(completion0, 1 minute)
-        val completion1 = userSource.runWith(MongoSink.updateOne(UserDao.usersCollection))
-        Await.result(completion1, 1 minute)
+        val completion1 = userSource.runWith(MongoSink.updateMany(UserDao.usersCollection))
+        Await.result(completion1, 5 minutes)
+        val completion0 = eventSource.runWith(MongoSink.updateMany(EventDao.eventsCollection))
+        Await.result(completion0, 5 minutes)
 
         userMap.clear()
         eventMap.clear()
