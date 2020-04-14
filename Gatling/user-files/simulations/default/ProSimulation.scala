@@ -32,14 +32,16 @@ class ProSimulation extends Simulation {
   
   val scn = scenario("User").exec(Search.search)
 
-//  setUp(scn.inject(atOnceUsers(4)).protocols(httpProtocol))
-  setUp(scn.inject(rampUsers(100) during(25 seconds)).protocols(httpProtocol))
+  // setUp(scn.inject(atOnceUsers(5)).protocols(httpProtocol))
+
+   setUp(scn.inject(rampUsers(100) during(500 seconds)).protocols(httpProtocol))
 
   object Search {
-    val feeder = csv("search.csv").random 
-
+    val user = csv("user.csv").random 
+    val ticket = csv("ticket.csv").random
     val search = 
-      feed(feeder)
+      feed(user)
+      .feed(ticket)
     //   .exec(
     //   http("request_1")
     //     .get("/")
@@ -64,7 +66,7 @@ class ProSimulation extends Simulation {
     // .pause(5)
     .exec(
       http("request_5")
-        .get("/purchaseResult?userName=${userName}&ticketInfo=TD+Garden%2Cvip")
+        .get("/purchaseResult?userName=${userName}&ticketInfo=${ticket}")
     )
   }
 
