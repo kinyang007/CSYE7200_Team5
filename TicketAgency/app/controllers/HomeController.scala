@@ -1,7 +1,8 @@
 package controllers
 
 import actors.EventActor.{FindByEventName, UpdateEvent}
-import actors.{EventActor, UserActor}
+import actors.PurchaseActor.Purchase
+import actors.{EventActor, PurchaseActor, UserActor}
 import actors.UserActor.{FindByUserName, LoginInfo, UpdateUser}
 import akka.actor.ActorSystem
 import akka.util.Timeout
@@ -17,11 +18,12 @@ import scala.concurrent.{Await, Future}
 class  HomeController @Inject()(system: ActorSystem, cc: ControllerComponents) extends AbstractController(cc) with play.api.i18n.I18nSupport {
     val userActor = system.actorOf(UserActor.props, "user-actor")
     val eventActor = system.actorOf(EventActor.props, "event-actor")
+    val purchaseActor = system.actorOf(PurchaseActor.props, "purchase-actor")
 
     import akka.pattern.ask
 
     import scala.concurrent.duration._
-    implicit val timeout: Timeout = 5 seconds
+    implicit val timeout: Timeout = 10 seconds
 
     def index() = Action { implicit request: Request[AnyContent] =>
         Ok(views.html.index())
@@ -52,35 +54,42 @@ class  HomeController @Inject()(system: ActorSystem, cc: ControllerComponents) e
     }
 
     def purchaseResult(userName: String, ticketInfo: String) = Action { implicit request: Request[AnyContent] =>
-        val ticketData = ticketInfo.split(",")
-        val eventName = ticketData.head
-        val ticketType = ticketData.tail.head
+        val result = (purchaseActor ? Purchase(userName, ticketInfo)).mapTo[Boolean]
 
-        val userResult: Future[Seq[User]] = (userActor ? FindByUserName(userName)).mapTo[Seq[User]]
-        val user = Await.result(userResult, 5 seconds).head
-
-        val eventResult: Future[Seq[Event]] = (eventActor ? FindByEventName(eventName)).mapTo[Seq[Event]]
-        val event = Await.result(eventResult, 5 seconds).head
-
-        val tickets = event.tickets.filter(t => t.ticket_type == ticketType && t.sold==false)
-        if(!tickets.isEmpty){
-            val ticket = tickets.head
-            val ticketIndex = event.tickets.indexOf(ticket)
-
-            val newUserTickets = user.tickets :+ new Ticket(ticket.ticket_id,ticket.ticket_type,ticket.price,true)
-            val newUser = new User(user._id,user.name,user.password, newUserTickets)
-
-            val mRest = scala.collection.mutable.Map(event.rest_tickets.toSeq:_*)
-            mRest.put(ticketType, mRest.get(ticketType).get-1)
-            val newEventRest = mRest.toMap
-            val newEventTickets = event.tickets.updated(ticketIndex, new Ticket(ticket.ticket_id,ticket.ticket_type,ticket.price,true))
-            val newEvent = new Event(event._id, event.name, event.event_type, newEventRest, newEventTickets)
-
-            userActor ? UpdateUser(newUser)
-            eventActor ? UpdateEvent(newEvent)
+        if (Await.result(result, 10 seconds)) {
             Ok(views.html.purchaseResult(userName, ticketInfo))
-        }else
+        } else {
             Ok(views.html.userPurchase(userName))
+        }
+//        val ticketData = ticketInfo.split(",")
+//        val eventName = ticketData.head
+//        val ticketType = ticketData.tail.head
+//
+//        val userResult: Future[Seq[User]] = (userActor ? FindByUserName(userName)).mapTo[Seq[User]]
+//        val user = Await.result(userResult, 5 seconds).head
+//
+//        val eventResult: Future[Seq[Event]] = (eventActor ? FindByEventName(eventName)).mapTo[Seq[Event]]
+//        val event = Await.result(eventResult, 5 seconds).head
+//
+//        val tickets = event.tickets.filter(t => t.ticket_type == ticketType && t.sold==false)
+//        if(!tickets.isEmpty){
+//            val ticket = tickets.head
+//            val ticketIndex = event.tickets.indexOf(ticket)
+//
+//            val newUserTickets = user.tickets :+ new Ticket(ticket.ticket_id,ticket.ticket_type,ticket.price,true)
+//            val newUser = new User(user._id,user.name,user.password, newUserTickets)
+//
+//            val mRest = scala.collection.mutable.Map(event.rest_tickets.toSeq:_*)
+//            mRest.put(ticketType, mRest.get(ticketType).get-1)
+//            val newEventRest = mRest.toMap
+//            val newEventTickets = event.tickets.updated(ticketIndex, new Ticket(ticket.ticket_id,ticket.ticket_type,ticket.price,true))
+//            val newEvent = new Event(event._id, event.name, event.event_type, newEventRest, newEventTickets)
+//
+//            userActor ? UpdateUser(newUser)
+//            eventActor ? UpdateEvent(newEvent)
+//            Ok(views.html.purchaseResult(userName, ticketInfo))
+//        }else
+//            Ok(views.html.userPurchase(userName))
 
     }
 

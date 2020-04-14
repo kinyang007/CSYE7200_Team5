@@ -1,7 +1,5 @@
 package services
 
-import java.util.concurrent.CompletionStage
-
 import akka.{Done, NotUsed}
 import akka.actor.ActorSystem
 import akka.stream.Materializer
