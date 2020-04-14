@@ -10,6 +10,7 @@ import daos.{EventDao, UserDao}
 import org.mongodb.scala.model.{Filters, Updates}
 import pojos.{Event, Ticket, User}
 
+import scala.collection.mutable
 import scala.concurrent._
 import scala.concurrent.duration._
 import scala.language.postfixOps
@@ -18,20 +19,19 @@ object PurchaseService {
     implicit val actorSystem: ActorSystem = ActorSystem()
     implicit val mat: Materializer = Materializer(actorSystem)
 
-    private var userList = Seq[User]()
-    private var eventList = Seq[Event]()
+    private val userMap: mutable.HashMap[String, User] = mutable.HashMap.empty[String, User]
+    private val eventMap: mutable.HashMap[String, Event] = mutable.HashMap.empty[String, Event]
 
     def purchase(purchases: List[Purchase]): Boolean = {
         // TODO - update several purchases
         var succ = true
-
-        for(p <- purchases){
+        for(p <- purchases) {
             val ticketData = p.ticketInfo.split(",")
             val eventName = ticketData.head
             val ticketType = ticketData.tail.head
 
-            val user = UserService.findByName(p.username).head
-            val event = EventService.findByName(eventName).head
+            val user = userMap.getOrElse(p.username, UserService.findByName(p.username).head)
+            val event = eventMap.getOrElse(eventName, EventService.findByName(eventName).head)
 
             val tickets = event.tickets.filter(t => t.ticket_type == ticketType && !t.sold)
             if (tickets.nonEmpty) {
@@ -39,7 +39,7 @@ object PurchaseService {
                 val ticketIndex = event.tickets.indexOf(ticket)
 
                 val newUserTickets = user.tickets :+ Ticket(ticket.ticket_id, ticket.ticket_type, ticket.price, sold = true)
-                val newUser = User(user._id,user.name,user.password, newUserTickets)
+                val newUser = User(user._id, user.name, user.password, newUserTickets)
 
                 val mRest = scala.collection.mutable.Map(event.rest_tickets.toSeq:_*)
                 mRest.put(ticketType, mRest.get(ticketType).get - 1)
@@ -47,14 +47,14 @@ object PurchaseService {
                 val newEventTickets = event.tickets.updated(ticketIndex, Ticket(ticket.ticket_id, ticket.ticket_type, ticket.price, sold = true))
                 val newEvent =  Event(event._id, event.name, event.event_type, newEventRest, newEventTickets)
 
-                userList :+ newUser
-                eventList :+ newEvent
+                userMap.put(p.username, newUser)
+                eventMap.put(eventName, newEvent)
             }else{
                 succ = false
             }
         }
 
-        val userSource = Source(userList).map(
+        val userSource = Source(userMap.values.toSeq).map(
             user => DocumentUpdate(
                 filter = Filters.eq("_id", user._id),
                 update = Updates.combine(
@@ -65,7 +65,7 @@ object PurchaseService {
             )
         )
 
-        val eventSource = Source(eventList).map(
+        val eventSource = Source(eventMap.values.toSeq).map(
             event => DocumentUpdate(
                 filter = Filters.eq("_id", event._id),
                 update = Updates.combine(
@@ -82,8 +82,8 @@ object PurchaseService {
         val completion1 = userSource.runWith(MongoSink.updateOne(UserDao.usersCollection))
         Await.result(completion1, 1 minute)
 
-        userList = userList.empty
-        eventList = eventList.empty
+        userMap.clear()
+        eventMap.clear()
 
         succ
     }
