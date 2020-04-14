@@ -5,7 +5,13 @@
 
         <div class="wrapper doc">
             <article>
-                <h1>Hello, @userName @ticketInfo</h1>
+                <h1>Congratulation, @userName! You purchased Ticket: @ticketInfo</h1>
+
+                <form method="post" action="/userPage">
+                    <input type="hidden" name="name" value="@userName"/>
+                    <input type="hidden" name="password" value="123456"/>
+                    <input type="submit" value="Go to User Page"/>
+                </form></br>
 
             </article>
             <aside>
