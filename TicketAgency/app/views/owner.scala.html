@@ -1,0 +1,22 @@
+@import form.EventData
+
+@import form.UserData
+@(userForm : Form[UserData])(implicit request: RequestHeader, messagesProvider: MessagesProvider)
+
+@main("Welcome to Ticket Agency") {
+    @defining(play.core.PlayVersion.current) { version =>
+        <div class="wrapper doc">
+            <article>
+                <h1>Administrator Log in</h1>
+                @helper.form(action = routes.HomeController.ownerCheckEvent()) {
+                    @helper.inputText(userForm("name"))
+                    @helper.inputPassword(userForm("password"))
+                    <input style = "display:inline-block; width:150px; height:30px; margin-left: 100px" type="submit" value="Submit">
+                }
+            </article>
+            <aside>
+                @sidebar()
+            </aside>
+        </div>
+    }
+}

@@ -1,0 +1,25 @@
+@import form.EventData
+@import form.UserNameData
+@(eventForm : Form[EventData], userNameForm: Form[UserNameData])(implicit request: RequestHeader, messagesProvider: MessagesProvider)
+
+@main("Welcome to Ticket Agency") {
+  @defining(play.core.PlayVersion.current) { version =>
+    <div class="wrapper doc">
+      <article>
+        <h2>Events & User Ticket Purchase History</h2>
+        @helper.form(action = routes.HomeController.ownerEventList()) {
+          @helper.inputText(eventForm("Event Name"))
+          <input style = "display:inline-block; width:150px; height:30px" type="submit" value="Submit">
+          }
+        <hr style="margin-top: 20px; margin-bottom: 20px"/>
+        @helper.form(action = routes.HomeController.userTicketHistory()) {
+          @helper.inputText(userNameForm("User Name"))
+          <input style = "display:inline-block; width:150px; height:30px" type="submit" value="Submit">
+          }
+        </article>
+      <aside>
+      @sidebar()
+      </aside>
+    </div>
+  }
+}

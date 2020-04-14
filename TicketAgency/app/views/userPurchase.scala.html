@@ -1,0 +1,39 @@
+
+@(name : String)
+
+@main("Welcome to Ticket Agency") {
+    @defining(play.core.PlayVersion.current) { version =>
+
+        <div class="wrapper doc">
+            <article>
+                <h1>Hello, @name</h1>
+
+                <form method="GET" action="/purchaseResult">
+                    <input type="hidden" name="userName" value = "@name">
+                    Select One Ticket<br /><br />
+                    TD Garden - Ball Game<br />
+                    <label><input name="ticketInfo" type="radio" value="TD Garden,vip" /> vip $2000</label><br />
+                    <label><input name="ticketInfo" type="radio" value="TD Garden,floor1" />floor1 $1000</label><br />
+                    <label><input name="ticketInfo" type="radio" value="TD Garden,floor2" />floor2 $500</label><br />
+                    <label><input name="ticketInfo" type="radio" value="TD Garden,floor3" />floor3 $200</label><br />
+                    <label><input name="ticketInfo" type="radio" value="TD Garden,balcony" />balcony $100</label><br />
+                    <br /><br />
+                    Boston Symphony Orchestra - Concert<br />
+                    <label><input name="ticketInfo" type="radio" value="Boston Symphony Orchestra,vip" />vip $1000</label><br />
+                    <label><input name="ticketInfo" type="radio" value="Boston Symphony Orchestra,floor1" />floor1 $500</label><br />
+                    <label><input name="ticketInfo" type="radio" value="Boston Symphony Orchestra,floor2" />floor2 $250</label><br />
+                    <label><input name="ticketInfo" type="radio" value="Boston Symphony Orchestra,balcony" />balcony $100</label><br />
+                    <br /><br />
+                    Museum of Fine Arts<br />
+                    <label><input name="ticketInfo" type="radio" value="Museum of Fine Arts,vip" />vip $50</label><br />
+                    <label><input name="ticketInfo" type="radio" value="Museum of Fine Arts,standard" />standard $20</label><br />
+                    <br /><br />
+                    <input style = "display:inline-block; width:150px; height:30px; margin-left: 100px" type="submit" value="Place the Order" />
+                </form>
+            </article>
+            <aside>
+                @sidebar()
+            </aside>
+        </div>
+    }
+}
