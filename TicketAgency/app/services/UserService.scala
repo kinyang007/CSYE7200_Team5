@@ -33,7 +33,7 @@ object UserService {
 
         val rows: Future[Seq[User]] = source.runWith(Sink.seq)
 
-        Await.result(rows, 1 minute)
+        Await.result(rows, 5 minute)
     }
 
     def findByName(name: String): Seq[User] = {
