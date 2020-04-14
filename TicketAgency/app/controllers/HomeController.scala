@@ -116,8 +116,13 @@ class  HomeController @Inject()(system: ActorSystem, cc: ControllerComponents)
         val formData : EventData = EventData.ownerForm.bindFromRequest().get
         val eventResult: Future[Seq[Event]] = (eventActor ? FindByEventName(formData.eventName)).mapTo[Seq[Event]]
         val event = Await.result(eventResult, 5 seconds)
-        if (!event.isEmpty)
-            Ok(views.html.ownerEventList(event.head))
+        if (!event.isEmpty) {
+            var count = 0
+            for (ticketMap <- event.head.rest_tickets) {
+                count += ticketMap._2
+            }
+            Ok(views.html.ownerEventList(event.head, count))
+        }
         else
             Ok(views.html.ownerCheckEvent(EventData.ownerForm,UserNameData.userNameForm))
     }

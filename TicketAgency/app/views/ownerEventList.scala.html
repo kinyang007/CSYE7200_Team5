@@ -1,6 +1,6 @@
 @import pojos.{User}
 @import pojos.Event
-@(event: Event)
+@(event: Event, count: Int)
 
 @main("Welcome to Ticket Agency") {
   @defining(play.core.PlayVersion.current) { version =>
@@ -20,7 +20,7 @@
             <tr>
               <td>@event.name</td>
               <td>@event.event_type</td>
-              <td>@event.rest_tickets.size</td>
+              <td>@count</td>
               <td>@event.tickets.length</td>
             </tr>
         </table>
