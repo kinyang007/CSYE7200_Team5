@@ -2,7 +2,6 @@ package actors
 
 import akka.actor._
 import services.PurchaseService
-import pojos._
 
 import scala.collection.mutable.ArrayBuffer
 
@@ -26,7 +25,7 @@ class PurchaseActor extends Actor {
             lastTime = System.currentTimeMillis()
             if (lastTime - startTime > 2000) {
                 // TODO - Batch processing (How to return the result signal for each message)
-
+                sender() ! PurchaseService.purchase(purchaseQueue.toList)
                 purchaseQueue.clear()
                 startTime = System.currentTimeMillis()
             }

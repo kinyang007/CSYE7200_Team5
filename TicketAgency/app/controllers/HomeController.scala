@@ -1,20 +1,20 @@
 package controllers
 
-import actors.EventActor.{FindByEventName, UpdateEvent}
+import actors.EventActor.FindByEventName
 import actors.PurchaseActor.Purchase
+import actors.UserActor.{FindByUserName, LoginInfo}
 import actors.{EventActor, PurchaseActor, UserActor}
-import actors.UserActor.{FindByUserName, LoginInfo, UpdateUser}
 import akka.actor.ActorSystem
-import akka.util.Timeout
 import akka.pattern.ask
+import akka.util.Timeout
 import form.{EventData, UserData, UserNameData}
 import javax.inject._
 import play.api.mvc._
-import pojos.{Event, Ticket, User}
+import pojos.{Event, User}
 
-import scala.language.postfixOps
-import scala.concurrent.{Await, ExecutionContext, Future}
 import scala.concurrent.duration._
+import scala.concurrent.{Await, ExecutionContext, Future}
+import scala.language.postfixOps
 
 @Singleton
 class  HomeController @Inject()(system: ActorSystem, cc: ControllerComponents)
@@ -63,13 +63,13 @@ class  HomeController @Inject()(system: ActorSystem, cc: ControllerComponents)
     def purchaseResult(userName: String, ticketInfo: String) = Action { implicit request: Request[AnyContent] =>
         // TODO - implement batch purchase
 
-//        val result = (purchaseActor ? Purchase(userName, ticketInfo)).mapTo[Boolean]
-//
-//        if (Await.result(result, 5 minutes)) {
-//            Ok(views.html.purchaseResult(userName, ticketInfo))
-//        } else {
-//            Ok(views.html.userPurchase(userName))
-//        }
+        val result = (purchaseActor ? Purchase(userName, ticketInfo)).mapTo[Boolean]
+
+        if (Await.result(result, 5 minutes)) {
+            Ok(views.html.purchaseResult(userName, ticketInfo))
+        } else {
+            Ok(views.html.userPurchase(userName))
+        }
 
 //        val ticketData = ticketInfo.split(",")
 //        val eventName = ticketData.head

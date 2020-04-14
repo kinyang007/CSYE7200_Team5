@@ -32,7 +32,7 @@ object EventService {
 
         val rows: Future[Seq[Event]] = source.runWith(Sink.seq)
 
-        Await.result(rows, 5 seconds)
+        Await.result(rows, 20 seconds)
     }
 
     def findByType(event_type: String): Seq[Event] = {
