@@ -12,6 +12,8 @@ def generate(args):
 
     # events
     collection = db['events']
+    collection.drop()
+    collection = db['events']
     # TD Garden
     event = {
 		'_id': 0,
@@ -140,6 +142,8 @@ def generate(args):
     collection.insert_one(event)
 
     # users
+    collection = db['users']
+    collection.drop()
     collection = db['users']
     users = []
     for i in range(25000):

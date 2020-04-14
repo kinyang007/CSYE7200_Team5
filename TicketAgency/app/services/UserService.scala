@@ -27,7 +27,7 @@ object UserService {
 
         val rows: Future[Seq[User]] = source.runWith(Sink.seq)
 
-        Await.result(rows, 2 seconds)
+        Await.result(rows, 5 seconds)
     }
 
     def findAll: Seq[User] = {
@@ -43,7 +43,7 @@ object UserService {
 
         val rows: Future[Seq[User]] = source.runWith(Sink.seq)
 
-        Await.result(rows, 2 seconds)
+        Await.result(rows, 5 seconds)
     }
 
     def updateUser(user: User): Done = {
@@ -60,6 +60,6 @@ object UserService {
 
         val completion: Future[Done] = source.runWith(MongoSink.updateOne(UserDao.usersCollection))
 
-        Await.result(completion, 2 seconds)
+        Await.result(completion, 5 seconds)
     }
 }

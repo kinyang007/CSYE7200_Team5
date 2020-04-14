@@ -32,7 +32,7 @@ object EventService {
 
         val rows: Future[Seq[Event]] = source.runWith(Sink.seq)
 
-        Await.result(rows, 3 seconds)
+        Await.result(rows, 5 seconds)
     }
 
     def findByType(event_type: String): Seq[Event] = {
@@ -40,7 +40,7 @@ object EventService {
 
         val rows: Future[Seq[Event]] = source.runWith(Sink.seq)
 
-        Await.result(rows, 3 seconds)
+        Await.result(rows, 5 seconds)
     }
 
     def updateEvent(event: Event): Done = {
@@ -58,6 +58,6 @@ object EventService {
 
         val completion = source.runWith(MongoSink.updateOne(EventDao.eventsCollection))
 
-        Await.result(completion, 2 seconds)
+        Await.result(completion, 5 seconds)
     }
 }
