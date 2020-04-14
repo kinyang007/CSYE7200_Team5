@@ -1,5 +1,6 @@
 package services
 
+import actors.PurchaseActor.Purchase
 import akka.actor.ActorSystem
 import akka.stream.Materializer
 import akka.stream.alpakka.mongodb.DocumentUpdate
@@ -17,6 +18,7 @@ object PurchaseService {
     implicit val actorSystem: ActorSystem = ActorSystem()
     implicit val mat: Materializer = Materializer(actorSystem)
 
+    // Single purchase
     def purchase(username: String, ticketInfo: String): Boolean = {
         val ticketData = ticketInfo.split(",")
         val eventName = ticketData.head
@@ -62,9 +64,9 @@ object PurchaseService {
                 )
             )
             val completion0 = eventSource.runWith(MongoSink.updateOne(EventDao.eventsCollection))
-            Await.result(completion0, 5 seconds)
+            Await.result(completion0, 1 minute)
             val completion1 = userSource.runWith(MongoSink.updateOne(UserDao.usersCollection))
-            Await.result(completion1, 5 seconds)
+            Await.result(completion1, 1 minute)
             
             val userResult = UserService.findByName(newUser.name).head
             val eventResult = EventService.findByName(newEvent.name).head
@@ -73,5 +75,10 @@ object PurchaseService {
         } else {
             false
         }
+    }
+
+    def purchase(purchases: List[Purchase]): Boolean = {
+        // TODO - update several purchases
+
     }
 }

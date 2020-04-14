@@ -6,24 +6,31 @@ import actors.{EventActor, PurchaseActor, UserActor}
 import actors.UserActor.{FindByUserName, LoginInfo, UpdateUser}
 import akka.actor.ActorSystem
 import akka.util.Timeout
+import akka.pattern.ask
 import form.{EventData, UserData, UserNameData}
 import javax.inject._
 import play.api.mvc._
 import pojos.{Event, Ticket, User}
 
 import scala.language.postfixOps
-import scala.concurrent.{Await, Future}
+import scala.concurrent.{Await, ExecutionContext, Future}
+import scala.concurrent.duration._
 
 @Singleton
-class  HomeController @Inject()(system: ActorSystem, cc: ControllerComponents) extends AbstractController(cc) with play.api.i18n.I18nSupport {
+class  HomeController @Inject()(system: ActorSystem, cc: ControllerComponents)
+                               (implicit executionContext: ExecutionContext) extends AbstractController(cc) with play.api.i18n.I18nSupport {
     val userActor = system.actorOf(UserActor.props, "user-actor")
     val eventActor = system.actorOf(EventActor.props, "event-actor")
     val purchaseActor = system.actorOf(PurchaseActor.props, "purchase-actor")
 
-    import akka.pattern.ask
+//    system.scheduler.scheduleAtFixedRate(
+//        initialDelay = 0 microseconds,
+//        interval = 2 second,
+//        receiver = purchaseActor,
+//        message = "check"
+//    )
 
-    import scala.concurrent.duration._
-    implicit val timeout: Timeout = 10 seconds
+    implicit val timeout: Timeout = 5 minutes
 
     def index() = Action { implicit request: Request[AnyContent] =>
         Ok(views.html.index())
@@ -54,13 +61,16 @@ class  HomeController @Inject()(system: ActorSystem, cc: ControllerComponents) e
     }
 
     def purchaseResult(userName: String, ticketInfo: String) = Action { implicit request: Request[AnyContent] =>
-        val result = (purchaseActor ? Purchase(userName, ticketInfo)).mapTo[Boolean]
+        // TODO - implement batch purchase
 
-        if (Await.result(result, 10 seconds)) {
-            Ok(views.html.purchaseResult(userName, ticketInfo))
-        } else {
-            Ok(views.html.userPurchase(userName))
-        }
+//        val result = (purchaseActor ? Purchase(userName, ticketInfo)).mapTo[Boolean]
+//
+//        if (Await.result(result, 5 minutes)) {
+//            Ok(views.html.purchaseResult(userName, ticketInfo))
+//        } else {
+//            Ok(views.html.userPurchase(userName))
+//        }
+
 //        val ticketData = ticketInfo.split(",")
 //        val eventName = ticketData.head
 //        val ticketType = ticketData.tail.head
