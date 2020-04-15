@@ -108,8 +108,12 @@ class  HomeController @Inject()(system: ActorSystem, cc: ControllerComponents)
     }
 
     def ownerCheckEvent() = Action { implicit request: Request[AnyContent] =>
-        Ok(views.html.ownerCheckEvent(EventData.ownerForm, UserNameData.userNameForm))
-
+        val formData : UserData = UserData.userForm.bindFromRequest().get
+        if (formData.name == "jixiaoyang" && formData.password == "123456") {
+            Ok(views.html.ownerCheckEvent(EventData.ownerForm, UserNameData.userNameForm))
+        } else {
+            Ok(views.html.owner(UserData.userForm))
+        }
     }
 
     def ownerEventList() = Action { implicit request: Request[AnyContent] =>

@@ -6,12 +6,14 @@
 
         <div class="wrapper doc">
             <article>
-                <h1>Hello, @user.name Password: @user.password</h1>
+                <h1>Hello, @user.name</h1>
 
                 <form method="GET" action="/userPurchase">
                     <input type="hidden" name ="name" value="@user.name" />
-                    <input style = "display:inline-block; width:150px; height:30px; margin-left: 100px" type="submit" value="Buy Tickets"/>
+                    <input style = "display:inline-block; width:150px; height:30px; margin-left: 180px; margin-bottom: 30px" type="submit" value="Buy Tickets"/>
                 </form>
+
+                <h2>Ticket Purchase History</h2>
 
                 <table border="1">
                     <tr>

@@ -5,7 +5,6 @@ import pojos.User
 import scala.collection.mutable
 
 object Duplicate{
-
   def checkNoDuplicated : Boolean = {
     val users : Seq[User] = UserService.findAll
     val distinctList : mutable.HashSet[String] = mutable.HashSet.empty
