@@ -25,9 +25,12 @@ A ticket agency system that allows a large number of users to buy tickets for at
     ```
 ## **4. System Pressure Tests Results**
 * 1000 Users
-<img src=""/>
+<img src="https://github.com/kinyang007/CSYE7200_Team5/blob/master/Load%20Testing%20Reports/report%20pictures/1000users1.png"/>
+<img src="https://github.com/kinyang007/CSYE7200_Team5/blob/master/Load%20Testing%20Reports/report%20pictures/1000users1.png"/>
 * 2000 Users
-<img src=""/>
+<img src="https://github.com/kinyang007/CSYE7200_Team5/blob/master/Load%20Testing%20Reports/report%20pictures/2000users1.png"/>
+<img src="https://github.com/kinyang007/CSYE7200_Team5/blob/master/Load%20Testing%20Reports/report%20pictures/2000users2.png"/>
 * 4000 Users
-<img src=""/>
+<img src="https://github.com/kinyang007/CSYE7200_Team5/blob/master/Load%20Testing%20Reports/report%20pictures/4000users1.png"/>
+<img src="https://github.com/kinyang007/CSYE7200_Team5/blob/master/Load%20Testing%20Reports/report%20pictures/4000users2.png"/>
 
