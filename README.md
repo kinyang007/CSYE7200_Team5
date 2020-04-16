@@ -4,6 +4,9 @@
 * Jixiao Yang - yang.jix@husky.neu.edu
 * Xiaoge Zhang - zhang.xiaog@husky.neu.edu
 * Junyi Fang - fang.ju@husky.neu.edu
+### Presentations
+* [Project Proposal](https://github.com/kinyang007/CSYE7200_Team5/blob/master/Project%20Proposal_Team%205.pptx)
+* [Final Presentation](https://github.com/kinyang007/CSYE7200_Team5/blob/master/Final_Presentation_Team_5%20.pptx)
 <br/><br/>
 
 # **Title: Ticket Agency**  
@@ -16,6 +19,7 @@ A ticket agency system that allows a large number of users to buy tickets for at
 * [Alpakka 2.0.0-RC2 -- MongoDB](https://doc.akka.io/docs/alpakka/2.0.0-RC2/mongodb.html)
 * [MongoDB 4.2](https://docs.mongodb.com/)
 * [MongoDB Scala Driver 2.9.0](https://mongodb.github.io/mongo-scala-driver/2.9/)
+* [Gatling 3.3](https://gatling.io/docs/3.3/)
 ## **3. How to run**
 * [Generate Data](https://github.com/kinyang007/CSYE7200_Team5/tree/master/Generate%20Data)
 * Run project [TicketAgency](https://github.com/kinyang007/CSYE7200_Team5/tree/master/TicketAgency)
