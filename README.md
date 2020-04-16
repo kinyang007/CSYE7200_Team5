@@ -1,5 +1,7 @@
-# **CSYE 7200 Final Project -- Team 5** <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/Scala_logo.png/200px-Scala_logo.png" width="82" height="34"/>
-* Repository for *CSYE7200 Big-Data System Engineering Using Scala* Spring 2020 Final Project  
+# **CSYE 7200 Final Project -- Team 5** <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/Scala_logo.png/200px-Scala_logo.png" width="82" height="34"/>  
+Repository for *CSYE7200 Big-Data System Engineering Using Scala* Spring 2020 Final Project   
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/3a3e74d5785b4e659780219661deb17f)](https://app.codacy.com/manual/kinyang007/CSYE7200_Team5/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=kinyang007/CSYE7200_Team5&amp;utm_campaign=Badge_Grade)  
 ### **Team Members:**  
 * Jixiao Yang - yang.jix@husky.neu.edu
 * Xiaoge Zhang - zhang.xiaog@husky.neu.edu
